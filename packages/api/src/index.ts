@@ -5,6 +5,7 @@ import { pinoLogger } from 'hono-pino';
 import * as v from 'valibot';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import * as schema from './db/schema';
+import { eq } from 'drizzle-orm';
 
 type Variables = {
   drizzle: DrizzleD1Database<typeof schema>;
@@ -28,11 +29,11 @@ app.get('/stats', async (c) => c.json({
 }));
 
 const RegisterSchema = v.object({
-  name: v.string(),
+  name: v.pipe(v.string(), v.nonEmpty()),
 });
 
 app.post('/register-device', async (c) => {
-  const authorization = c.req.header('Authorization');
+  const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
   if (authorization !== c.env.TOKEN) return c.json({ success: false }, 403);
 
   const form = v.safeParse(RegisterSchema, await c.req.json());
@@ -40,7 +41,7 @@ app.post('/register-device', async (c) => {
 
   const token = cuid2();
   const result = await c.var.drizzle.insert(schema.devicesTable).values({
-    id: token,
+    token,
     name: form.output.name,
   });
   if (!result.success) return c.json({ success: false, issues: result.error }, 500);
@@ -48,6 +49,25 @@ app.post('/register-device', async (c) => {
   return c.json({
     success: true,
     token: token
+  });
+});
+
+app.get('/ping', async (c) => {
+  const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
+  if (!authorization || !authorization.length) return c.json({ successs: false }, 403);
+
+  const device = await c.var.drizzle.select().from(schema.devicesTable).where(eq(schema.devicesTable.token, authorization));
+  const deviceId = device[0]?.id;
+  if (!device.length || deviceId == undefined) return c.json({ success: false }, 403);
+
+  const result = await c.var.drizzle.insert(schema.eventsTable).values({
+    device: deviceId,
+    ts: new Date()
+  });
+  if (!result.success) return c.json({ success: false, issues: result.error }, 500);
+
+  return c.json({
+    success: true,
   });
 });
 
