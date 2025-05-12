@@ -8,5 +8,11 @@
       "database_name": "<name>",
       "database_id": "<id>"
     }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "<id>"
+    }
   ]
 }

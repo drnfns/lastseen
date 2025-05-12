@@ -4,6 +4,7 @@ import { pinoLogger } from 'hono-pino';
 
 type Bindings = {
   DB: D1Database;
+  KV: KVNamespace;
 };
 
 type Variables = {
