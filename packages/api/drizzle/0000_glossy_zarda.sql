@@ -1,10 +1,8 @@
 CREATE TABLE `devices` (
 	`id` text PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
-	`token` text NOT NULL
+	`name` text NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `devices_token_unique` ON `devices` (`token`);--> statement-breakpoint
 CREATE TABLE `events` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`ts` integer,

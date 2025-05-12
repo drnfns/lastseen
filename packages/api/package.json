@@ -6,7 +6,9 @@
   "packageManager": "yarn@4.9.1",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "generate": "drizzle-kit generate",
+    "migrate": "./migrate.sh"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.1",
@@ -14,9 +16,11 @@
     "wrangler": "^4.14.4"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
     "drizzle-orm": "^0.43.1",
     "hono": "^4.7.9",
     "hono-pino": "^0.8.0",
-    "pino": "^9.6.0"
+    "pino": "^9.6.0",
+    "valibot": "^1.1.0"
   }
 }
