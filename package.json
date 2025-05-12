@@ -1,4 +1,11 @@
 {
   "name": "lastseen",
-  "packageManager": "yarn@4.9.1"
+  "private": true,
+  "packageManager": "yarn@4.9.1",
+  "workspaces": [
+    "./packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
 }

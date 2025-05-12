@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "types": [
+      "./worker-configuration.d.ts"
+    ],
+    "lib": [
+      "ESNext",
+      "WebWorker",
+    ],
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "strict": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true
+  }
+}
