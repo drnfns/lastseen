@@ -1,0 +1,21 @@
+{
+  "name": "lastseen-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-05-07",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lastseen",
+      "database_id": "daa6acc1-be5b-4b0d-b35e-19f90de03b60"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "6ad7c63954004cf6a3e47be827865783"
+    }
+  ],
+  "vars": {
+    "CORS_ORIGIN": "localhost"
+  }
+}
