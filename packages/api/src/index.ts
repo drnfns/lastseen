@@ -5,7 +5,7 @@ import { pinoLogger } from 'hono-pino';
 import * as v from 'valibot';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import * as schema from './db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 type Variables = {
   drizzle: DrizzleD1Database<typeof schema>;
@@ -56,15 +56,27 @@ app.get('/ping', async (c) => {
   const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
   if (!authorization || !authorization.length) return c.json({ successs: false }, 403);
 
-  const device = await c.var.drizzle.select().from(schema.devicesTable).where(eq(schema.devicesTable.token, authorization));
-  const deviceId = device[0]?.id;
-  if (!device.length || deviceId == undefined) return c.json({ success: false }, 403);
+  const device = await c.var.drizzle.query.devicesTable.findFirst({
+    where: (tb, { eq }) => eq(tb.token, authorization)
+  });
+  if (!device) return c.json({ success: false }, 403);
 
+  const ts = new Date();
   const result = await c.var.drizzle.insert(schema.eventsTable).values({
-    device: deviceId,
-    ts: new Date()
+    device: device.id,
+    ts,
   });
   if (!result.success) return c.json({ success: false, issues: result.error }, 500);
+
+  await c.env.KV.put("last_seen", ts.toISOString());
+  const last = await c.var.drizzle.query.eventsTable.findFirst({
+    orderBy: (tb, { desc }) => desc(tb.id)
+  });
+  if (!last) {
+    await c.env.KV.put("longest_absence", "0");
+  } else {
+    await c.env.KV.put("longest_absence", Math.round((last.ts.getTime() - ts.getTime()) / 1000).toString());
+  }
 
   return c.json({
     success: true,
