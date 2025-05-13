@@ -25,7 +25,7 @@ app.get('/stats', async (c) => c.json({
   total_events: await c.var.drizzle.$count(schema.eventsTable),
   longest_absence: await c.env.KV.get("longest_absence"),
   last_seen: await c.env.KV.get("last_seen")
-}, 200, { "Cache-Control": "max-age=1, stale-while-revalidate=59" }));
+}, 200, { "Cache-Control": "max-age=15, stale-while-revalidate=59" }));
 
 const RegisterSchema = v.object({
   name: v.pipe(v.string(), v.nonEmpty()),
