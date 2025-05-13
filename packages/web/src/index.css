@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Departure Mono";
+  src: url("/DepartureMono-Regular.woff2") format("woff2"),
+    url("/DepartureMono-Regular.woff") format("woff"),
+    url("/DepartureMono-Regular.otf") format("otf");
+  font-display: swap;
+}
+
+@theme {
+  --font-mono: "Departure Mono", monospace, monospace;
+
+  --color-*: initial;
+
+  --color-background: #2b2933;
+  --color-f-high: #f2f2f2;
+  --color-f-med: #00bdd6;
+  --color-f-low: #aa9fdf;
+  --color-f-inv: #1a1820;
+  --color-b-high: #1a1820;
+  --color-b-med: #24212c;
+  --color-b-low: #34303b;
+  --color-b-inv: #f2f2f2;
+}
