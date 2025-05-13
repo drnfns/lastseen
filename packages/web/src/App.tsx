@@ -6,8 +6,8 @@ export default () => {
   const numFmt = new Intl.NumberFormat(navigator.languages);
 
   const interval = setInterval(() => {
-    fetch("http://localhost:8787/stats").then((res) => res.json()).then(setStats);
-  }, 1000);
+    fetch(import.meta.env.VITE_API_URL).then((res) => res.json()).then(setStats);
+  }, 5000);
   onCleanup(() => clearInterval(interval));
 
   return (
