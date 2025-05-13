@@ -5,7 +5,6 @@ import { pinoLogger } from 'hono-pino';
 import * as v from 'valibot';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import * as schema from './db/schema';
-import { eq, sql } from 'drizzle-orm';
 
 type Variables = {
   drizzle: DrizzleD1Database<typeof schema>;
@@ -14,7 +13,7 @@ type Variables = {
 const app = new Hono<{ Bindings: Env; Variables: Variables; }>();
 app.use(pinoLogger());
 app.use((c, next) => {
-  c.set("drizzle", drizzle(c.env.DB));
+  c.set("drizzle", drizzle<typeof schema>(c.env.DB, { schema }));
   return next();
 });
 app.use('*', async (c, next) => cors({
