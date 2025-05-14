@@ -35,13 +35,18 @@ app.post('/register-device', async (c) => {
   const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
   if (authorization !== c.env.TOKEN) return c.json({ success: false }, 403);
 
-  const form = v.safeParse(RegisterSchema, await c.req.json());
-  if (!form.success) return c.json({ success: false, issues: form.issues }, 400);
+  let form: v.InferInput<typeof RegisterSchema>;
+  try {
+    const json = await c.req.json();
+    form = v.parse(RegisterSchema, json);
+  } catch (e) {
+    return c.json({ success: false, error: (e as Error).toString() }, 400);
+  }
 
   const token = cuid2();
   const result = await c.var.drizzle.insert(schema.devicesTable).values({
     token,
-    name: form.output.name,
+    name: form.name,
   });
   if (!result.success) return c.json({ success: false, issues: result.error }, 500);
 
