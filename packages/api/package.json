@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "packageManager": "yarn@4.9.1",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
@@ -11,16 +10,16 @@
     "migrate": "./migrate.sh"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.1",
-    "typescript": "^5.8.3",
-    "wrangler": "^4.14.4"
+    "drizzle-kit": "^0.31.11",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.145.0"
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^2.2.2",
-    "drizzle-orm": "^0.43.1",
-    "hono": "^4.7.9",
-    "hono-pino": "^0.8.0",
-    "pino": "^9.6.0",
-    "valibot": "^1.1.0"
+    "@paralleldrive/cuid2": "^3.3.0",
+    "drizzle-orm": "^0.45.3",
+    "hono": "^4.13.12",
+    "hono-pino": "^0.10.3",
+    "pino": "^10.3.1",
+    "valibot": "^1.5.0"
   }
 }
