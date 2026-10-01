@@ -32,8 +32,7 @@ const RegisterSchema = v.object({
 });
 
 app.post('/register-device', async (c) => {
-  const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
-  if (!c.env.TOKEN || authorization !== c.env.TOKEN) return c.json({ success: false }, 403);
+  if (c.env.TOKEN !== `Bearer ${c.req.header('Authorization')}`) return c.json({ success: false }, 403);
 
   let form: v.InferInput<typeof RegisterSchema>;
   try {
@@ -57,11 +56,11 @@ app.post('/register-device', async (c) => {
 });
 
 app.post('/ping', async (c) => {
-  const authorization = c.req.header('Authorization')?.split(' ')?.at(1);
-  if (!authorization || !authorization.length) return c.json({ success: false }, 403);
+  const auth = c.req.header('Authorization');
+  if (c.env.TOKEN !== `Bearer ${auth}`) return c.json({ success: false }, 403);
 
   const device = await c.var.drizzle.query.devicesTable.findFirst({
-    where: (tb, { eq }) => eq(tb.token, authorization)
+    where: (tb, { eq }) => eq(tb.token, auth!.split(' ')[1])
   });
   if (!device) return c.json({ success: false }, 403);
 
