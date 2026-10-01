@@ -65,21 +65,22 @@ app.get('/ping', async (c) => {
   });
   if (!device) return c.json({ success: false }, 403);
 
+  const prev = await c.var.drizzle.query.eventsTable.findFirst({
+    orderBy: (tb, { desc }) => desc(tb.id)
+  });
+
   const ts = new Date();
   const result = await c.var.drizzle.insert(schema.eventsTable).values({
     device: device.id,
     ts,
   });
   if (!result.success) return c.json({ success: false, issues: result.error }, 500);
-
   await c.env.KV.put("last_seen", ts.toISOString());
-  const last = await c.var.drizzle.query.eventsTable.findFirst({
-    orderBy: (tb, { desc }) => desc(tb.id)
-  });
-  if (!last) {
-    await c.env.KV.put("longest_absence", "0");
-  } else {
-    await c.env.KV.put("longest_absence", Math.round((last.ts.getTime() - ts.getTime()) / 1000).toString());
+
+  if (prev) {
+    const gap = Math.round((ts.getTime() - prev.ts.getTime()) / 1000);
+    const longest = Number(await c.env.KV.get("longest_absence") ?? 0);
+    if (gap > longest) await c.env.KV.put("longest_absence", gap.toString());
   }
 
   return c.json({
