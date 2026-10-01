@@ -5,9 +5,16 @@ export default () => {
   const [stats, setStats] = createSignal<{ total_events: number, longest_absence: string, last_seen: string; } | undefined>(undefined);
   const numFmt = new Intl.NumberFormat(navigator.languages);
 
-  const interval = setInterval(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/stats`).then((res) => res.json()).then(setStats);
-  }, 5000);
+  const fmtDuration = (s: number) => {
+    const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
+    return d ? `${d}d ${h}h` : h ? `${h}h ${m}m` : `${m}m ${s % 60}s`;
+  };
+
+  const load = () =>
+    fetch(`${import.meta.env.VITE_API_URL}/stats`)
+      .then((res) => res.json()).then(setStats).catch(() => {});
+  load();
+  const interval = setInterval(load, 5000);
   onCleanup(() => clearInterval(interval));
 
   return (
@@ -22,6 +29,7 @@ export default () => {
         </li>
         <li class="flex items-center justify-between">
           <h3>longest absence</h3>
+           <span class="text-3xl">{fmtDuration(Number(stats()?.longest_absence ?? 0))}</span>
         </li>
         <li class="flex items-center justify-between">
           <h3>total heartbeats</h3>
