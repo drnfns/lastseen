@@ -6,17 +6,16 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "generate": "drizzle-kit generate",
-    "migrate": "./migrate.sh"
+    "migrate": "wrangler d1 migrations apply lastseen --remote",
+    "migrate:local": "wrangler d1 migrations apply lastseen --local",
+    "migrate:new": "wrangler d1 migrations create lastseen"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.31.11",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.0",
     "wrangler": "^4.145.0"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^3.3.0",
-    "drizzle-orm": "^0.45.3",
     "hono": "^4.13.12",
     "hono-pino": "^0.10.3",
     "pino": "^10.3.1",

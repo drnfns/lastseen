@@ -6,7 +6,8 @@
     {
       "binding": "DB",
       "database_name": "lastseen",
-      "database_id": "daa6acc1-be5b-4b0d-b35e-19f90de03b60"
+      "database_id": "daa6acc1-be5b-4b0d-b35e-19f90de03b60",
+      "migrations_dir": "migrations"
     }
   ],
   "kv_namespaces": [
